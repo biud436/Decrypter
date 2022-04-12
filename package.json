@@ -1,25 +1,33 @@
 {
-  "name": "decrypter",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "biud436",
-  "license": "MIT",
-  "dependencies": {
-    "acorn": "^7.1.1",
-    "cuint": "^0.2.2",
-    "decompress-zip": "^0.2.2",
-    "deep-parse-json": "^1.0.1",
-    "encoding": "^0.1.12",
-    "lzma-native": "^6.0.0",
-    "minimist": "^1.2.5",
-    "nexe": "^3.3.2",
-    "stringify-object": "^3.3.0"
-  }
+    "name": "decrypter",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib/index.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "start": "ts-node lib"
+    },
+    "author": "biud436",
+    "license": "MIT",
+    "dependencies": {
+        "acorn": "^7.1.1",
+        "cuint": "^0.2.2",
+        "decompress-zip": "^0.2.2",
+        "deep-parse-json": "^1.0.1",
+        "encoding": "^0.1.12",
+        "fs-extra": "^10.0.1",
+        "lzma-native": "^6.0.0",
+        "minimist": "^1.2.5",
+        "nexe": "^3.3.2",
+        "stringify-object": "^3.3.0",
+        "ts-node": "^10.7.0",
+        "tsc": "^2.0.4",
+        "typedi": "^0.10.0",
+        "typescript": "^4.6.3"
+    },
+    "devDependencies": {
+        "@types/cuint": "^0.2.1"
+    }
 }
