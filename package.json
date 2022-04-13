@@ -12,22 +12,24 @@
     "author": "biud436",
     "license": "MIT",
     "dependencies": {
+        "@types/minimist": "^1.2.2",
         "acorn": "^7.1.1",
         "cuint": "^0.2.2",
         "decompress-zip": "^0.2.2",
-        "deep-parse-json": "^1.0.1",
+        "deep-parse-json": "^1.0.2",
         "encoding": "^0.1.12",
         "fs-extra": "^10.0.1",
         "lzma-native": "^6.0.0",
-        "minimist": "^1.2.5",
+        "minimist": "^1.2.6",
         "nexe": "^3.3.2",
-        "stringify-object": "^3.3.0",
+        "stringify-object": "^4.0.1",
         "ts-node": "^10.7.0",
         "tsc": "^2.0.4",
         "typedi": "^0.10.0",
         "typescript": "^4.6.3"
     },
     "devDependencies": {
-        "@types/cuint": "^0.2.1"
+        "@types/cuint": "^0.2.1",
+        "@types/fs-extra": "^9.0.13"
     }
 }
