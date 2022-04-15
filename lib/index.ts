@@ -152,11 +152,13 @@ class App {
   public static _utils: Utils;
 
   static run() {
-    if (!fs.statSync(mainPath as fs.PathLike).isDirectory()) {
+    const isDirectory = fs.statSync(mainPath as fs.PathLike).isDirectory();
+    const isExist = fs.existsSync(path.join(mainPath, "www", "index.html"));
+    if (!isDirectory) {
       throw new Error(`You doesn't specify the project folder!`);
     }
 
-    if (fs.existsSync(path.join(mainPath, "www", "index.html"))) {
+    if (isExist) {
       console.log(
         `Found a file named ${ConsoleColor.Bright}index.html${ConsoleColor.Reset} into www folder`
       );
