@@ -10,10 +10,11 @@ import ConsoleColor from "./ConsoleColor";
 import * as deepParseJson from "deep-parse-json";
 import minimist from "minimist";
 import os from "os";
+import { MainPath } from "./types";
 
 const args = process.argv.slice(2);
 const argv = minimist(process.argv.slice(2));
-let mainPath: string = null;
+let mainPath: MainPath = null;
 
 if (argv.help) {
   console.log(`
@@ -121,7 +122,7 @@ async function extractResourceFiles(callback: Function) {
     if (argv.d) {
       let filename = argv.d;
       try {
-        const zipUtils = new ZipUtils(mainPath, filename, callback);
+        const zipUtils = new ZipUtils(mainPath!, filename, callback);
         resolve(zipUtils);
       } catch (e) {
         reject(e);
@@ -151,9 +152,9 @@ if (!argv.i) {
 class App {
   public static _utils: Utils;
 
-  static run() {
+  public static run() {
     const isDirectory = fs.statSync(mainPath as fs.PathLike).isDirectory();
-    const isExist = fs.existsSync(path.join(mainPath, "www", "index.html"));
+    const isExist = fs.existsSync(path.join(mainPath!, "www", "index.html"));
     if (!isDirectory) {
       throw new Error(`You doesn't specify the project folder!`);
     }
@@ -162,11 +163,11 @@ class App {
       console.log(
         `Found a file named ${ConsoleColor.Bright}index.html${ConsoleColor.Reset} into www folder`
       );
-      mainPath = path.join(mainPath, "www");
+      mainPath = path.join(mainPath!, "www");
       this.decrypt();
     } else {
       extractResourceFiles(() => {
-        mainPath = path.join(mainPath.replace(/\\/g, "/"), "www");
+        mainPath = path.join(mainPath!.replace(/\\/g, "/"), "www");
         this.decrypt();
       }).catch((e) => {
         throw new Error(e.message);
@@ -174,7 +175,7 @@ class App {
     }
   }
 
-  static decrypt() {
+  public static decrypt() {
     this._utils = new Utils();
     this._utils.convert();
   }
@@ -188,13 +189,13 @@ class Utils {
   private _encryptionKey: any;
 
   constructor() {
-    this._audioDir = path.join(mainPath, "audio");
-    this._imgDir = path.join(mainPath, "img");
+    this._audioDir = path.join(mainPath!, "audio");
+    this._imgDir = path.join(mainPath!, "img");
     this._headerlength = 16;
     this._isFoundEncryptionKey = false;
   }
 
-  convert() {
+  public convert() {
     this._encryptionKey = this.readEncryptionKey();
     this.readImgFolders();
     this.readAudioFolders();
@@ -206,7 +207,7 @@ class Utils {
    * @param {ArrayBuffer} bin
    * @return {Buffer}
    */
-  toBuffer(bin: ArrayBuffer) {
+  public toBuffer(bin: ArrayBuffer) {
     var buf = Buffer.alloc(bin.byteLength);
     var headerView = new Uint8Array(bin);
     for (var i = 0; i < bin.byteLength; i++) {
@@ -215,7 +216,7 @@ class Utils {
     return buf;
   }
 
-  writeDecryptStream(filePath: fs.PathLike, bin: Buffer) {
+  public writeDecryptStream(filePath: fs.PathLike, bin: Buffer) {
     var writeStream = fs.createWriteStream(filePath, { flags: "w+" });
     writeStream.write(bin);
     writeStream.end();
@@ -232,7 +233,7 @@ class Utils {
    * @param {Buffer} data
    * @return {ArrayBuffer}
    */
-  writeBinary(ret: string[], data: Buffer) {
+  public writeBinary(ret: string[], data: Buffer) {
     var arrayBuffer = data;
 
     var refBytes = new Uint8Array(16);
@@ -277,7 +278,7 @@ class Utils {
     return resultBuffer;
   }
 
-  readAllFiles(root: string, ext: string[], files: string[]) {
+  public readAllFiles(root: string, ext: string[], files: string[]) {
     if (!root) return;
     var self = this;
     if (!fs.existsSync(root)) return;
@@ -297,7 +298,7 @@ class Utils {
     });
   }
 
-  readAudioFolders() {
+  public readAudioFolders() {
     var files: string[] = [];
     var types = [".rpgmvo", ".rpgmvm", ".rpgmvw"];
     this.readAllFiles(this._audioDir.replace(/\\/g, "/"), types, files);
@@ -362,7 +363,7 @@ class Utils {
    * @param {Buffer} buffer
    * @return {Array}
    */
-  makeEncryptedKey(buffer: Buffer) {
+  public makeEncryptedKey(buffer: Buffer) {
     if (this._isFoundEncryptionKey) return;
 
     this._encryptionKey = [];
@@ -390,7 +391,7 @@ class Utils {
    * @param {Buffer} buffer
    * @return {Array}
    */
-  getOggDecryptedHeader(buffer: Buffer) {
+  public getOggDecryptedHeader(buffer: Buffer) {
     // https://svn.xiph.org/trunk/vorbis-tools/oggenc/oggenc.c
     // struct _ogg_header (27바이트)
     // {
@@ -452,7 +453,7 @@ class Utils {
     return config.OriginHeaders.ogg.concat(header.serialNumber.toString());
   }
 
-  readImgFolders() {
+  public readImgFolders() {
     var files: string[] = [];
     var types = [".rpgmvp"];
     this.readAllFiles(this._imgDir.replace(/\\/g, "/"), types, files);
@@ -508,8 +509,8 @@ class Utils {
     });
   }
 
-  readEncryptionKey() {
-    const targetFile = path.join(mainPath, "data", "System.json");
+  public readEncryptionKey() {
+    const targetFile = path.join(mainPath!, "data", "System.json");
     let retKey = [
       "d4",
       "1d",
@@ -536,11 +537,11 @@ class Utils {
     }
 
     // data 폴더를 읽는다 (재귀적으로 처리하지 않음)
-    const files = fs.readdirSync(path.join(mainPath, "data"));
+    const files = fs.readdirSync(path.join(mainPath!, "data"));
 
     // nwjc로 컴파일된 자바스크립트 파일이 존재하는 지 찾는다.
     const binFiles = files.filter((file) => {
-      file = path.join(mainPath, "data", file);
+      file = path.join(mainPath!, "data", file);
       fs.lstatSync(file).isFile() && path.extname(file) === ".bin";
     });
 
@@ -612,8 +613,8 @@ class Utils {
     return retKey;
   }
 
-  createProjectFile() {
-    const targetFile = path.join(mainPath, "Game.rpgproject");
+  public createProjectFile() {
+    const targetFile = path.join(mainPath!, "Game.rpgproject");
     const PRODUCT_VERSION = `1.6.2`;
     if (!fs.existsSync(targetFile)) {
       fs.writeFileSync(targetFile, `RPGMV ${PRODUCT_VERSION}`, "utf8");

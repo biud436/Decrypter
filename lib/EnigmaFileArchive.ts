@@ -22,7 +22,7 @@ export class EnigmaFileArchive {
   public _numberOfFiles: number;
   public _fileSize: number;
   public _isFile: boolean;
-  public _fileOffset: number;
+  public _fileOffset!: number;
   public _fileAttribute: number;
 
   public _rawOffset: number;
@@ -69,7 +69,7 @@ export class EnigmaFileArchive {
     this._parent = null;
   }
 
-  isFile() {
+  public isFile() {
     return this._isFile;
   }
 }

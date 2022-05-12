@@ -95,7 +95,7 @@ export namespace Enigma {
       this._AllowVirtualExecutableFileToRun = false; // 가상 실행 파일의 실행 허용
     }
 
-    unpack() {
+    public unpack() {
       this.checkSignature();
       this.parseProperties();
       this.parseDataSize();
@@ -120,7 +120,7 @@ export namespace Enigma {
       }
     }
 
-    checkSignature() {
+    public checkSignature() {
       let startOffset = 0;
       const maxOffset = 0x100;
       const data = this._rawData;
@@ -154,7 +154,7 @@ export namespace Enigma {
       }
     }
 
-    parseProperties() {
+    public parseProperties() {
       let curOffset = this._offset;
 
       // 파일 가상화 사용
@@ -192,7 +192,7 @@ export namespace Enigma {
       );
     }
 
-    parseDataSize() {
+    public parseDataSize() {
       const startOffset = this._offset + 0x20;
 
       // FAT32에서는 최대 파일 사이즈가 4GB이고,
@@ -211,7 +211,7 @@ export namespace Enigma {
       this._offset = this._offset + 0x53;
     }
 
-    parseFiles() {
+    public parseFiles() {
       let startOffset = this._offset;
 
       // 최대 오프셋 값은 섹션 로우 데이터의 크기 - 파일 크기 - 상단 오프셋의 크기이며 추정치이다.
@@ -375,7 +375,7 @@ export namespace Enigma {
       this._dataOffset = curOffset;
     }
 
-    exportFiles() {
+    public exportFiles() {
       // 올림 차순으로 정렬한다 (1->2->3->4)
       this._sortedFiles = this._files.slice(0).sort((a, b) => {
         return a._treeIndex - b._treeIndex;
@@ -398,7 +398,7 @@ export namespace Enigma {
      * @param {Buffer} data
      * @return {Buffer}
      */
-    toSafeBuffer(data: Buffer) {
+    public toSafeBuffer(data: Buffer) {
       const resultBuffer = new ArrayBuffer(data.length);
       const view = new DataView(resultBuffer);
 
@@ -419,7 +419,7 @@ export namespace Enigma {
       return buf;
     }
 
-    decompress(buffer: Buffer) {
+    public decompress(buffer: Buffer) {
       // ---- File Header (13 Bytes) ----
       // Properties (5 Bytes) + Uncompressed File Size ( 8 Bytes )
       // ---- Compression Method ----
@@ -432,7 +432,7 @@ export namespace Enigma {
      * 내부 파일을 탐색하면서 파일 경로와 파일 내용을 작성한다.
      * @param {EnigmaFileArchive} root
      */
-    exploreFiles(root: EnigmaFileArchive) {
+    public exploreFiles(root: EnigmaFileArchive) {
       const lastFolders: EnigmaFileArchive[] = [];
 
       /**

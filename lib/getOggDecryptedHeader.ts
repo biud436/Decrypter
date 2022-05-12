@@ -108,7 +108,7 @@ class App {
    * @param {Buffer} buffer
    * @return {Array}
    */
-  getOggDecryptedHeader(buffer: Buffer) {
+  public getOggDecryptedHeader(buffer: Buffer) {
     // https://svn.xiph.org/trunk/vorbis-tools/oggenc/oggenc.c
     // struct _ogg_header (27바이트)
     // {

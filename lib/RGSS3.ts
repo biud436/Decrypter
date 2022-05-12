@@ -60,7 +60,7 @@ namespace RGSS3 {
      * @param {Number[]} keyBuf
      * @param {Number} offset
      */
-    read(buffer: Buffer, key: any, keyBuf: number[], offset: number) {
+    public read(buffer: Buffer, key: any, keyBuf: number[], offset: number) {
       const tempOffset = offset;
 
       this._offset = buffer.readUInt32LE(offset) ^ key;
@@ -105,7 +105,7 @@ namespace RGSS3 {
       super();
     }
 
-    read(
+    public read(
       buffer: Buffer,
       key: any,
       keyBufFunc: Function | number[],
@@ -187,7 +187,7 @@ class App {
     }
   }
 
-  async checkVersion() {
+  public async checkVersion() {
     let version = await this.getApplicationVersion(this._gameFile);
 
     switch (version.trim()) {
@@ -207,7 +207,7 @@ class App {
     }
   }
 
-  convert(key: Uint) {
+  public convert(key: Uint) {
     let n = key.toNumber();
     var keyBuffer = [
       (n >> 0) & 0xff,
@@ -226,7 +226,7 @@ class App {
    * @param {UINT64} key
    * @return {Buffer} keyBuffer;
    */
-  takeNextKey(key: Uint) {
+  public takeNextKey(key: Uint) {
     key.multiply(UINT64(7)).add(UINT64(3));
 
     const keyBuffer = this.convert(key);
@@ -243,7 +243,7 @@ class App {
    * @param {Number} dKey
    * @return {Buffer}
    */
-  toSafeBuffer(data: Buffer, dKey: number) {
+  public toSafeBuffer(data: Buffer, dKey: number) {
     const resultBuffer = new ArrayBuffer(data.length);
     const view = new DataView(resultBuffer);
 
@@ -272,7 +272,26 @@ class App {
     return buf;
   }
 
-  decrypt() {
+  /**
+   * This method is the same as a funciton called 'fs.existsSync(fs.PathLike)'
+   *
+   * @param filename
+   * @returns {boolean}
+   */
+  private existSync(filename: fs.PathLike) {
+    let isExist = false;
+
+    try {
+      fs.accessSync(filename, fs.constants.F_OK);
+      isExist = true;
+    } catch {
+      isExist = false;
+    }
+
+    return isExist;
+  }
+
+  public decrypt() {
     if (!fs.existsSync(this._root)) {
       throw new Error("게임 폴더가 존재하지 않습니다.");
     }
@@ -349,7 +368,7 @@ class App {
     });
   }
 
-  getApplicationVersion(rootPath: string): Promise<string> {
+  public getApplicationVersion(rootPath: fs.PathLike): Promise<string> {
     return new Promise((resolve, reject) => {
       if (!process.platform.includes("win")) {
         reject("Your computer is not window platform");

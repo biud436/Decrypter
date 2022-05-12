@@ -1,7 +1,7 @@
 import fs from "fs";
 import minimist from "minimist";
 
-const argv = minimist(process.argv.slice(2));
+const argv = <minimist.ParsedArgs>minimist(process.argv.slice(2));
 
 if (argv.help) {
   console.log(`
@@ -100,7 +100,7 @@ class App {
    * @param {Buffer} buffer
    * @return {Array}
    */
-  makeEncryptedKey(buffer: Buffer) {
+  public makeEncryptedKey(buffer: Buffer) {
     if (this._isFoundEncryptionKey) return;
 
     this._encryptionKey = [];

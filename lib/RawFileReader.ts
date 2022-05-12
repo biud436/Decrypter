@@ -91,11 +91,11 @@ export class RawFileReader {
     return this._isReady ? this._version : "v0.0.0";
   }
 
-  isValid() {
+  public isValid() {
     return this.version !== "v0.0.0";
   }
 
-  readNodeVersion(binaryPath: string) {
+  public readNodeVersion(binaryPath: string) {
     var dllFile = path.normalize(path.win32.join(binaryPath, "node.dll"));
 
     if (!fs.existsSync(dllFile)) {
@@ -125,7 +125,7 @@ export class RawFileReader {
     return version;
   }
 
-  readNodeVersionForOlder(binaryPath: string) {
+  public readNodeVersionForOlder(binaryPath: string) {
     var dllFile = path.normalize(
       path.win32.join(binaryPath, this._mainFileName)
     );
@@ -163,7 +163,7 @@ export class RawFileReader {
    * 압축 파일을 실행 파일에서 추출한다.
    * @ret {Buffer}
    */
-  extractZip(mainFolder: string) {
+  public extractZip(mainFolder: string) {
     if (!fs.existsSync(mainFolder)) {
       throw new Error("There is no main folder");
     }
@@ -241,7 +241,7 @@ export class RawFileReader {
    * Enigma Virtual Box를 사용하였는 지를 알아낸다.
    * @return {Boolean}
    */
-  checkEnigmaUnpacker(binaryPath: string) {
+  public checkEnigmaUnpacker(binaryPath: string) {
     console.log(
       `${this._mainFileName}가 Enigma Virtual Box를 사용하였는 지 확인하고 있습니다.`
     );
